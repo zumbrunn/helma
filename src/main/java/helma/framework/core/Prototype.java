@@ -190,10 +190,27 @@ public final class Prototype {
         if (!trackers.containsKey(name)) {
             if (name.endsWith(TypeManager.templateExtension) ||
                     name.endsWith(TypeManager.scriptExtension) ||
+                    name.endsWith(TypeManager.serversideExtension) ||
+                    name.endsWith(TypeManager.hacExtension) ||
                     name.endsWith(TypeManager.actionExtension) ||
-                    name.endsWith(TypeManager.skinExtension)) {
+                    name.endsWith(TypeManager.actionGetExtension) ||
+                    name.endsWith(TypeManager.actionPostExtension) ||
+                    name.endsWith(TypeManager.actionPutExtension) ||
+                    name.endsWith(TypeManager.actionDeleteExtension) ||
+                    name.endsWith(TypeManager.controlExtension) ||
+                    name.endsWith(TypeManager.macroExtension) ||
+                    name.endsWith(TypeManager.fetchletExtension) ||
+                    name.endsWith(TypeManager.e4xExtension) ||
+                    name.endsWith(TypeManager.jsonExtension) ||
+                    name.endsWith(TypeManager.skinExtension) ||
+                    name.endsWith(TypeManager.viewExtension) ||
+                    name.endsWith(TypeManager.clientsideExtension) ||
+                    name.endsWith(TypeManager.csExtension)) {
                 updated = true;
-                if (name.endsWith(TypeManager.skinExtension)) {
+                if (name.endsWith(TypeManager.skinExtension)
+                       || name.endsWith(TypeManager.viewExtension)
+                        || name.endsWith(TypeManager.clientsideExtension)
+                        || name.endsWith(TypeManager.csExtension)) {
                     skins.add(res);
                 } else {
                     if (engine != null) {

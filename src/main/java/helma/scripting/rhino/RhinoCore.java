@@ -319,6 +319,15 @@ public final class RhinoCore implements ScopeProvider {
 
         contextFactory.call(new ContextAction() {
             public Object run(Context cx) {
+
+                // clear fetchlet index
+                try {
+                    cx.evaluateReader(type.objProto, new StringReader("this._fetchlets = [];"), null, 0, null);
+                } catch (Exception e) {
+                    ScriptingException sx = new ScriptingException(e.getMessage(), e);
+                    app.logError("Error clearing fetchlet index for " + type.objProto, sx);
+                }
+
                 // loop through the prototype's code elements and evaluate them
                 Iterator code = prototype.getCodeResources();
                 while (code.hasNext()) {
@@ -904,18 +913,50 @@ public final class RhinoCore implements ScopeProvider {
         try {
             Scriptable op = type.objProto;
             // do the update, evaluating the file
-            if (sourceName.endsWith(".js")) {
+            if (sourceName.endsWith(".js") || sourceName.endsWith(".serverside")) {
                 reader = encoding == null ?
                         new InputStreamReader(code.getInputStream()) :
                         new InputStreamReader(code.getInputStream(), encoding);
                 cx.evaluateReader(op, reader, sourceName, 1, null);
-            } else if (sourceName.endsWith(".hac")) {
+            } else if (sourceName.endsWith(".hac") || sourceName.endsWith(".action")) {
                 reader = new StringReader(HacHspConverter.convertHac(code, encoding));
+                cx.evaluateReader(op, reader, sourceName, 0, null);
+            } else if (sourceName.endsWith(".get")) {
+                reader = new StringReader(HacHspConverter.convertHacGet(code, encoding));
+                cx.evaluateReader(op, reader, sourceName, 0, null);
+            } else if (sourceName.endsWith(".post")) {
+                reader = new StringReader(HacHspConverter.convertHacPost(code, encoding));
+                cx.evaluateReader(op, reader, sourceName, 0, null);
+            } else if (sourceName.endsWith(".put")) {
+                reader = new StringReader(HacHspConverter.convertHacPut(code, encoding));
+                cx.evaluateReader(op, reader, sourceName, 0, null);
+            } else if (sourceName.endsWith(".delete")) {
+                reader = new StringReader(HacHspConverter.convertHacDelete(code, encoding));
+                cx.evaluateReader(op, reader, sourceName, 0, null);
+            } else if (sourceName.endsWith(".macro")) {
+                reader = new StringReader(HacHspConverter.convertMacro(code, encoding));
+                cx.evaluateReader(op, reader, sourceName, 0, null);
+            } else if (sourceName.endsWith(".fetchlet")) {
+                reader = new StringReader(
+                    "if (!this.hasOwnProperty('_fetchlets')) this._fetchlets = [];"
+                    + "this._fetchlets.push('" + code.getBaseName().replace('.', '_') + "');"
+                    + HacHspConverter.convertFetchlet(code, encoding));
+                cx.evaluateReader(op, reader, sourceName, 0, null);
+            } else if (sourceName.endsWith(".control")) {
+                reader = new StringReader(HacHspConverter.convertControl(code, encoding));
                 cx.evaluateReader(op, reader, sourceName, 0, null);
             } else if (sourceName.endsWith(".hsp")) {
                 reader = new StringReader(HacHspConverter.convertHsp(code, encoding));
                 cx.evaluateReader(op, reader, sourceName, 0, null);
                 reader = new StringReader(HacHspConverter.convertHspAsString(code, encoding));
+                cx.evaluateReader(op, reader, sourceName, 0, null);
+            } else if (sourceName.endsWith(".e4x")) {
+                reader = new StringReader("this."
+                    + code.getBaseName().replace('.', '_') + "_e4x = "+ code.getContent(encoding));
+                cx.evaluateReader(op, reader, sourceName, 0, null);
+            } else if (sourceName.endsWith(".json")) {
+                reader = new StringReader("this."
+                    + code.getBaseName().replace('.', '_') + "_json = "+ code.getContent(encoding));
                 cx.evaluateReader(op, reader, sourceName, 0, null);
             }
 
