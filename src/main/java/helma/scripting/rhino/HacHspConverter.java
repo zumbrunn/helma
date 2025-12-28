@@ -34,6 +34,48 @@ public class HacHspConverter {
         return composeFunction(functionName, null, action.getContent(encoding));
     }
 
+    public static String convertHacGet(Resource action, String encoding)
+            throws IOException {
+        String functionName = action.getBaseName().replace('.', '_') + "_action_get";
+        return composeFunction(functionName, null, action.getContent(encoding));
+    }
+
+    public static String convertHacPost(Resource action, String encoding)
+            throws IOException {
+        String functionName = action.getBaseName().replace('.', '_') + "_action_post";
+        return composeFunction(functionName, null, action.getContent(encoding));
+    }
+
+    public static String convertHacPut(Resource action, String encoding)
+            throws IOException {
+        String functionName = action.getBaseName().replace('.', '_') + "_action_put";
+        return composeFunction(functionName, null, action.getContent(encoding));
+    }
+
+    public static String convertHacDelete(Resource action, String encoding)
+            throws IOException {
+        String functionName = action.getBaseName().replace('.', '_') + "_action_delete";
+        return composeFunction(functionName, null, action.getContent(encoding));
+    }
+
+    public static String convertMacro(Resource action, String encoding)
+            throws IOException {
+        String functionName = action.getBaseName().replace('.', '_') + "_macro";
+        return composeFunction(functionName, "params", action.getContent(encoding));
+    }
+
+    public static String convertFetchlet(Resource action, String encoding)
+            throws IOException {
+        String functionName = action.getBaseName().replace('.', '_') + "_fetchlet";
+        return composeFunction(functionName, "params", action.getContent(encoding));
+    }
+
+    public static String convertControl(Resource action, String encoding)
+            throws IOException {
+        String functionName = action.getBaseName().replace('.', '_') + "_control";
+        return composeFunction(functionName, "view", action.getContent(encoding));
+    }
+
     public static String convertHsp(Resource template, String encoding)
             throws IOException {
         String functionName = template.getBaseName().replace('.', '_');

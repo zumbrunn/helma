@@ -34,8 +34,22 @@ public final class TypeManager {
     final static String[] standardTypes = { "User", "Global", "Root", "HopObject" };
     final static String templateExtension = ".hsp";
     final static String scriptExtension = ".js";
-    final static String actionExtension = ".hac";
+    final static String serversideExtension = ".serverside";
+    final static String hacExtension = ".hac";
+    final static String actionExtension = ".action";
+    final static String actionGetExtension = ".get";
+    final static String actionPostExtension = ".post";
+    final static String actionPutExtension = ".put";
+    final static String actionDeleteExtension = ".delete";
+    final static String controlExtension = ".control";
+    final static String macroExtension = ".macro";
+    final static String fetchletExtension = ".fetchlet";
+    final static String e4xExtension = ".e4x";
+    final static String jsonExtension = ".json";
     final static String skinExtension = ".skin";
+    final static String viewExtension = ".view";
+    final static String clientsideExtension = ".clientside";
+    final static String csExtension = ".cs";
 
     private Application app;
     // map of prototypes
