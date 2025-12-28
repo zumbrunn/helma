@@ -1,0 +1,5 @@
+jar {
+  manifest {
+    from 'src/main/java/helma/main/launcher/manifest.txt'
+  }
+}

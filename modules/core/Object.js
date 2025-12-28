@@ -17,12 +17,16 @@
 /**
  * @fileoverview Adds useful methods to the JavaScript Object type.
  * <br /><br />
- * To use this optional module, its repository needs to be added to the 
+ * To use this optional module, its repository needs to be added to the
  * application, for example by calling app.addRepository('modules/core/Object.js')
  */
 
+app.addRepository('modules/core/Global.js');
+
 /**
  * Copies the properties of this object into a clone.
+ * @external
+ * @memberof {Object}
  * @param {Object} clone The optional target object
  * @param {Boolean} recursive If true child objects are cloned as well, otherwise
  * the clone contains references to the child objects
@@ -30,59 +34,61 @@
  */
 Object.prototype.clone = function(clone, recursive) {
 
-   var getValue = function(value, recursive) {
-      if ((value == null || typeof(value) !== "object") || recursive !== true) {
-         return value;
-      }
-      return value.clone(null, recursive);
-   };
+    var getValue = function(value, recursive) {
+        if (recursive !== true || value == null
+                || (typeof (value) !== "object" && typeof (value) !== "function")) {
+            return value;
+        }
+        return value.clone(null, recursive);
+    };
 
-   if (typeof(this) === "object") {
-      switch (this.constructor) {
-         case Array:
-            return this.map(function(value) {
-               return getValue(value, recursive);
-            });
+    if (typeof (this) === "object") {
+        if (this === null) {
+            return null;
+        }
+        switch (this.constructor) {
+            case String:
+            case Number:
+            case Boolean:
+            case Date:
+                return new this.constructor(this.valueOf());
 
-         case null: // e.g. macro parameter objects
-            if (clone == null) {
-               clone = {};
-            }
-            // continue below
-         case Object:
-         case HopObject:
-            if (clone == null) {
-               clone = new this.constructor();
-            }
-            for (var propName in this) {
-               clone[propName] = getValue(this[propName], recursive);
-            }
-            return clone;
+            case Array:
+                return this.map(function(value) {
+                    return getValue(value, recursive);
+                });
 
-         default:
-            return new this.constructor(this.valueOf());
-      }
-   } else if (typeof(this) === "function" && this.constructor === RegExp) {
-      return new RegExp(this.valueOf());
-   }
-   return this;
+            default:
+                if (clone == null) {
+                    clone = new this.constructor();
+                }
+                for ( var propName in this) {
+                    clone[propName] = getValue(this[propName], recursive);
+                }
+                return clone;
+        }
+    } else if (typeof (this) === "function" && this.constructor === RegExp) {
+        return new RegExp(this.valueOf());
+    }
+    return this;
 };
 
 
 /**
  * reduce an extended object (ie. a HopObject)
  * to a generic javascript object
+ * @external
+ * @memberof {Object}
  * @param HopObject the HopObject to be reduced
  * @return Object the resulting generic object
  */
 Object.prototype.reduce = function(recursive) {
     var result = {};
     for (var i in this) {
-        if (this[i] instanceof HopObject == false) {
+        if (this[i] instanceof HopObject == false)
             result[i] = this[i];
-        } else if (recursive) {
+        else if (recursive)
             result[i] = this.reduce(true);
-        }
     }
     return result;
 };
@@ -90,6 +96,8 @@ Object.prototype.reduce = function(recursive) {
 
 /**
  * print the contents of an object for debugging
+ * @external
+ * @memberof {Object}
  * @param Object the object to dump
  * @param Boolean recursive flag (if true, dump child objects, too)
  */

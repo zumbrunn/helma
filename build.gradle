@@ -1,0 +1,294 @@
+plugins {
+  id 'application'
+  id 'com.github.jk1.dependency-license-report' version '2.9'
+}
+
+import org.apache.tools.ant.filters.FixCrLfFilter
+
+def jettyLogLevel = '-Dorg.eclipse.jetty.LEVEL=WARN'
+
+// Suppress menu bar and default icon being shown in macos dock (Radar #5754483)
+// See https://developer.apple.com/library/content/releasenotes/Java/JavaLeopardUpdate1RN/ResolvedIssues/ResolvedIssues.html
+def suppressMacosDockIcon = '-Dapple.awt.UIElement=true'
+
+// This list is used to determine which files need processing of line endings
+def textFiles = ['**/*.hac', '**/.html', '**/*.js', '**/*.md', '**/*.properties', '**/*.skin', '**/*.txt', '**/*.xml']
+
+allprojects {
+  apply plugin: 'java'
+
+  java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+  }
+
+  repositories {
+    mavenCentral()
+  }
+}
+
+version = new Date().format("yy.M.d")
+
+tasks.build.dependsOn javadoc, 'jsdoc', 'generateLicenseReport'
+tasks.compileJava.dependsOn 'processSource'
+
+// Disable DocLint for now
+// See <https://blog.joda.org/2014/02/turning-off-doclint-in-jdk-8-javadoc.html>
+if (JavaVersion.current().isJava8Compatible()) {
+  allprojects {
+    tasks.withType(Javadoc) {
+      options.addStringOption('Xdoclint:none', '-quiet')
+    }
+  }
+}
+
+configurations {
+  // Wrapping implementation because it does not allow access to its files
+  // (i.e. cannot be resolved)
+  library.extendsFrom implementation
+}
+
+dependencies {
+  implementation 'com.google.code.gson:gson:2.12.1'
+  implementation 'commons-codec:commons-codec:1.18.0'
+  implementation 'org.apache.commons:commons-fileupload2-core:2.0.0-M2'
+  implementation 'org.apache.commons:commons-fileupload2-jakarta:2.0.0-M1'
+  implementation 'commons-logging:commons-logging:1.3.5'
+  implementation 'commons-net:commons-net:3.11.1'
+  implementation 'com.sun.mail:javax.mail:1.6.2'
+  implementation 'jakarta.servlet:jakarta.servlet-api:5.0.0'
+  implementation 'org.ccil.cowan.tagsoup:tagsoup:1.2.1'
+  implementation 'org.eclipse.jetty.ee9:jetty-ee9-servlet:12.0.19'
+  implementation 'org.eclipse.jetty:jetty-xml:12.0.19'
+  implementation 'org.mozilla:rhino-all:1.8.0'
+  implementation 'org.sejda.imageio:webp-imageio:0.1.6'
+  implementation 'xerces:xercesImpl:2.12.2'
+  implementation 'xmlrpc:xmlrpc:2.0.1'
+}
+
+def rhinoJar = configurations.library.files.find { jar ->
+  jar.name.startsWith('rhino')
+}
+
+run {
+  jvmArgs jettyLogLevel, suppressMacosDockIcon
+  classpath += fileTree(dir: 'lib/ext', include: '*.jar')
+}
+
+application {
+  mainClass = 'helma.main.Server'
+
+  applicationDistribution.from(projectDir) {
+    include 'modules/**'
+    include 'LICENSE.md'
+    include 'README.md'
+    include 'start.*'
+  }
+
+  applicationDistribution.from(javadoc.destinationDir) {
+    include '**'
+    into 'docs/javadoc'
+  }
+
+  applicationDistribution.from("${project.buildDir}/docs/jsdoc") {
+    include '**'
+    into 'docs/jsdoc'
+  }
+
+  applicationDistribution.from("${project.buildDir}/reports/dependency-license") {
+    include '**'
+    into 'licenses'
+  }
+}
+
+startScripts {
+  applicationName = 'helma'
+  classpath = files('../launcher.jar')
+  mainClass = 'helma.main.launcher.Main'
+
+  defaultJvmOpts = [jettyLogLevel, suppressMacosDockIcon]
+
+  doLast {
+    // Work-around to make the classpath above work (launcher.jar is located outside of `lib` dir)
+    // See https://discuss.gradle.org/t/classpath-in-application-plugin-is-building-always-relative-to-app-home-lib-directory/2012
+    def unixScriptFile = file getUnixScript()
+    def windowsScriptFile = file getWindowsScript()
+    unixScriptFile.text = unixScriptFile.text.replace('$APP_HOME/lib', '$APP_HOME')
+    windowsScriptFile.text = windowsScriptFile.text.replace('%APP_HOME%\\lib', '%APP_HOME%')
+  }
+}
+
+distributions {
+  main {
+    contents {
+      from project(':launcher').jar
+    }
+  }
+}
+
+distTar {
+  dependsOn ':generateLicenseReport', ':javadoc', ':jsdoc'
+
+  compression = Compression.GZIP
+
+  filesMatching(textFiles) {
+    filter(FixCrLfFilter.class, eol: FixCrLfFilter.CrLf.newInstance("lf"))
+  }
+}
+
+distZip {
+  dependsOn ':generateLicenseReport', ':javadoc', ':jsdoc'
+
+  filesMatching(textFiles) {
+    filter(FixCrLfFilter.class, eol: FixCrLfFilter.CrLf.newInstance("crlf"))
+  }
+}
+
+installDist {
+  dependsOn build
+}
+
+def processSource = tasks.register('processSource', Sync) {
+  def gitOutput = new ByteArrayOutputStream()
+
+  outputs.dir "${project.buildDir}/src"
+
+  exec {
+    commandLine 'git', 'rev-parse', '--short', 'HEAD'
+    standardOutput = gitOutput
+    errorOutput = new ByteArrayOutputStream()
+    ignoreExitValue = true
+  }
+
+  from 'src'
+
+  filter {
+    line -> line
+      .replaceAll('__builddate__', new Date().format("d MMM yyyy"))
+      .replaceAll('__commithash__', gitOutput.toString().trim())
+      .replaceAll('__version__', version)
+  } into outputs.files.singleFile
+}
+
+tasks.compileJava.source = processSource.map { it.outputs.files }
+
+tasks.register('update') {
+  dependsOn installDist
+
+  def rsyncArgs = ['--archive', '--filter', '- backups']
+
+  def confirm = {
+    ant.input(message: 'Update this installation?', validargs: 'yes,no', addproperty: 'continue')
+    return ant.continue == 'yes'
+  }
+
+  onlyIf { confirm() }
+
+  doFirst {
+    def backupDir = 'backups/' + new Date().format('yyyyMMdd-HHmmss')
+
+    mkdir backupDir
+
+    exec {
+      // Create a backup with rsync instead of a CopyTask because the latter chokes on multi-byte characters
+      // See https://github.com/gradle/gradle/issues/789
+      executable 'rsync'
+      args rsyncArgs
+      args "$projectDir/", backupDir
+    }
+
+    print "Created backup of ${projectDir} in ${backupDir}"
+  }
+
+  doLast {
+    exec {
+      // Using rsync to selectively update the repo directory
+      executable 'rsync'
+      args '--delete'
+      args rsyncArgs
+      args '--filter', '+ bin/***'
+      args '--filter', '+ docs/***'
+      args '--filter', '+ extras/***'
+      args '--filter', '+ launcher.jar'
+      args '--filter', '+ lib'
+      args '--filter', '+ *.jar'
+      args '--filter', '- *'
+      args "${installDist.destinationDir}/", projectDir
+    }
+  }
+}
+
+tasks.register('jsdoc', Exec) {
+  description 'Generates JSDoc API documentation for the included JavaScript modules.'
+  group 'Documentation'
+
+  def sources = ['modules/core', 'modules/helma', 'modules/jala/code']
+  def destination = "${project.buildDir}/docs/jsdoc"
+
+  sources.each { dir -> inputs.dir dir }
+  outputs.dir destination
+
+  executable 'npx'
+  args = ['jsdoc', '-d', "$destination"].plus(sources)
+}
+
+tasks.register('xgettext', JavaExec) {
+  description 'Extracts translatable message strings from source code.'
+  group 'i18n'
+
+  classpath = files('launcher.jar')
+  mainClass = 'helma.main.launcher.Commandline'
+
+  // TODO: Decouple from Antville app
+  args = [
+    // Root.extractMessages is currently located in antville/code/Global/i18n.js
+    'antville.extractMessages',
+    'modules/jala/util/HopKit/scripts/MessageParser.js',
+    'code compat',
+    'apps/antville/i18n/antville.pot'
+  ]
+}
+
+tasks.register('po2js', JavaExec) {
+  description 'Converts translated message strings from PO format to JavaScript.'
+  group 'i18n'
+
+  classpath = files(rhinoJar)
+  mainClass = 'org.mozilla.javascript.tools.shell.Main'
+
+  // TODO: Decouple from Antville app
+  args = [
+    'modules/jala/util/HopKit/scripts/PoParser.js',
+    'apps/antville/i18n',
+    'apps/antville/i18n'
+  ]
+}
+
+tasks.register('rhinoShell', JavaExec) {
+  description 'Runs the interactive Rhino JavaScript shell.'
+  group 'Application'
+
+  classpath = files(rhinoJar)
+  mainClass = 'org.mozilla.javascript.tools.shell.Main'
+
+  standardInput = System.in
+}
+
+// Call this task with a function definition using the `-P` parameter, e.g.
+// `./gradlew commandLine -Pfunction=manage.getAllApplications`
+tasks.register('commandLine', JavaExec) {
+  description 'Runs a function in a Helma application with `-Pfunction=app.functionName`.'
+  group 'Application'
+
+  classpath = files('launcher.jar')
+  mainClass = 'helma.main.launcher.Commandline'
+  args '-h', projectDir, function
+}
+
+tasks.register('debug', JavaExec) {
+  group = 'application'
+  main = 'helma.main.Server'
+  classpath = sourceSets.main.runtimeClasspath
+  jvmArgs = ['-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005']
+  classpath += fileTree(dir: 'lib/ext', include: '*.jar')
+}

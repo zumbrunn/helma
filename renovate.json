@@ -1,0 +1,50 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+
+  "extends": [
+    "config:recommended",
+    "mergeConfidence:all-badges",
+    "npm:unpublishSafe",
+    ":disableRateLimiting",
+    ":pinVersions",
+    ":semanticCommitsDisabled"
+  ],
+
+  "osvVulnerabilityAlerts": true,
+
+  "vulnerabilityAlerts": {
+    "labels": ["security", "urgent"],
+    "automerge": true
+  },
+
+  "labels": ["dependency"],
+
+  "packageRules": [
+    {
+      "description": "Label Helma core packages",
+      "matchFiles": ["build.gradle"],
+      "addLabels": ["core"]
+    },
+    {
+      "description": "Label major version bumps",
+      "matchUpdateTypes": ["major"],
+      "addLabels": ["major"]
+    },
+    {
+      "description": "Label packages required at runtime",
+      "matchDepTypes": ["dependencies"],
+      "addLabels": ["runtime"]
+    },
+    {
+      "description": "Group Jetty packages",
+      "matchPackagePrefixes": ["org.eclipse.jetty"],
+      "groupName": "Jetty packages"
+    },
+    {
+      "description": "Group Lucene packages",
+      "matchPackagePrefixes": ["org.apache.lucene"],
+      "groupName": "Lucene packages"
+    }
+  ]
+}
+

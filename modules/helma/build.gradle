@@ -1,0 +1,18 @@
+dependencies {
+	runtimeOnly 'ch.ethz.ganymed:ganymed-ssh2:build209'
+	runtimeOnly 'net.sourceforge.jexcelapi:jxl:2.5.7'
+	runtimeOnly 'org.apache.lucene:lucene-analyzers:2.2.0'
+	runtimeOnly 'org.apache.lucene:lucene-core:2.2.0'
+}
+
+jar.enabled = false
+compileJava.enabled = false
+compileTestJava.enabled = false
+processResources.enabled = false
+processTestResources.enabled = false
+test.enabled = false
+
+tasks.register('deps', Copy) {
+	from sourceSets.main.runtimeClasspath
+	into '.'
+}

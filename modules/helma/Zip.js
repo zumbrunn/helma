@@ -17,7 +17,7 @@
 /**
  * @fileoverview Fields and methods of the helma.Zip class.
  * <br /><br />
- * To use this optional module, its repository needs to be added to the 
+ * To use this optional module, its repository needs to be added to the
  * application, for example by calling app.addRepository('modules/helma/Zip.js')
  */
 
@@ -39,7 +39,7 @@ if (!global.helma) {
  * path to the .zip file as string.
  * @constructor
  * @returns A newly created instance of helma.Zip.
- * @author Robert Gaggl <robert@nomatic.org> 
+ * @author Robert Gaggl <robert@nomatic.org>
  */
 helma.Zip = function(file) {
 
@@ -85,7 +85,7 @@ helma.Zip = function(file) {
                 var outStream = new java.io.BufferedOutputStream(new java.io.FileOutputStream(dest));
                 outStream.write(buf, 0, size);
             } finally {
-                outStream.close();
+                if (outStream) outStream.close();
             }
         }
         return null;
@@ -150,7 +150,7 @@ helma.Zip = function(file) {
         }
         return result;
     };
-    
+
     /**
      * Returns an array containing the entries of the archive
      * represented by this helma.Zip instance.
@@ -225,7 +225,7 @@ helma.Zip = function(file) {
      * or the path to a file or directory on disk that should be added to the
      * archive. If the argument represents a directory, its contents will be added
      * <em>recursively</em> to the archive.
-     * @param {Number} level An optional compression level to use. The argument 
+     * @param {Number} level An optional compression level to use. The argument
      * must be between zero and 9 (default: 9 = best compression).
      * @param {String} pathPrefix An optional path prefix to use within the archive.
      */
@@ -304,9 +304,26 @@ helma.Zip = function(file) {
      * @type ByteArray
      */
     this.getData = function() {
+        zOutStream.close();
+        fOutStream.close();
+        var inputStream = new java.io.FileInputStream(tempFile);
+        var bOutStream = new java.io.ByteArrayOutputStream();
+        var buffer = java.lang.reflect.Array.newInstance(java.lang.Byte.TYPE, 8192);
+        try {
+            var chunk;
+            while ((chunk = inputStream.read(buffer)) !== -1) {
+                bOutStream.write(buffer, 0, chunk);
+            }
+            bOutStream.flush();
+        } catch (ex) {
+            app.log(ex);
+        } finally {
+            if (inputStream) inputStream.close();
+            if (bOutStream) bOutStream.close();
+        }
         return bOutStream.toByteArray();
-     };
-    
+    };
+
     /**
      * Saves the archive.
      * @param {String} dest The full destination path including the name
@@ -317,12 +334,13 @@ helma.Zip = function(file) {
             throw new Error("no destination for ZipFile given");
         // first of all, close the ZipOutputStream
         zOutStream.close();
+        fOutStream.close();
         var destFile = new java.io.File(dest);
         try {
-            var outStream = new java.io.FileOutputStream(destFile);
-            bOutStream.writeTo(outStream);
-        } finally {
-            outStream.close();
+            if (destFile.exists()) destFile['delete']();
+            java.nio.file.Files.move(tempFile.toPath(), destFile.toPath());
+        } catch (ex) {
+            app.log(ex);
         }
         return;
     };
@@ -339,8 +357,10 @@ helma.Zip = function(file) {
     /**
      * constructor body
      */
-    var bOutStream = new java.io.ByteArrayOutputStream();
-    var zOutStream = new java.util.zip.ZipOutputStream(bOutStream);
+    var tempFile = new java.io.File.createTempFile('zip-', '');
+    var fOutStream = new java.io.FileOutputStream(tempFile);
+    var zOutStream = new java.util.zip.ZipOutputStream(fOutStream);
+
     if (file) {
         file = evalFile(file);
     }
@@ -446,7 +466,7 @@ helma.Zip.Entry = function(entry) {
 
     /**
      * The data of the zip entry
-     * @type ByteArray 
+     * @type ByteArray
      */
     this.data = null;
 

@@ -17,7 +17,7 @@
 /**
  * @fileoverview Implements some useful macro filters.
  * <br /><br />
- * To use this optional module, its repository needs to be added to the 
+ * To use this optional module, its repository needs to be added to the
  * application, for example by calling app.addRepository('modules/core/Filters.js')
  */
 
@@ -65,7 +65,7 @@ function titleize_filter(input) {
 
 
 /**
- * Cuts a String at a certain position, and 
+ * Cuts a String at a certain position, and
  * optionally appends a suffix, if truncation
  * has occurred.
  *
@@ -127,7 +127,7 @@ var h_filter = escapeHtml_filter;
 
 
 /**
- * Escapes the characters in a String to be suitable 
+ * Escapes the characters in a String to be suitable
  * to use as an HTTP parameter value.
  *
  * @see http://www.google.com/codesearch?q=escapeUrl
@@ -168,11 +168,10 @@ function linebreakToHtml_filter(input) {
  * @param new
  */
 function replace_filter(input, param, oldString, newString) {
-   var str = (input || "").toString();
-   var oldString = param["old"] != null ? param["old"] : oldString;
-   var newString = param["new"] != null ? param["new"] : newString;
-   var replace = Packages.org.eclipse.jetty.util.StringUtil.replace;
-   return replace(str, oldString, newString);
+   var str = String(input || '');
+   var oldString = param.old || oldString;
+   var newString = param['new'] || newString;
+   return str.replace(new RegExp(oldString, 'g'), newString);
 }
 
 

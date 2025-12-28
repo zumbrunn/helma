@@ -1,3 +1,30 @@
-classes/*
-launcher.jar
-lib/helma*.jar
+# Generally ignore hidden files
+.*
+
+# Manage some Codium configuration
+.vscode/*
+!.vscode
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/settings.json
+!.vscode/tasks.json
+
+# Ignore files created during build or run
+/bin
+/backups
+build
+/docs
+/lib
+/licenses
+/log
+
+# Ignore files managed in src/dist
+/*.properties
+/apps
+/db
+/extras
+/launcher.jar
+/static
+
+# Manage Gradle configuration
+!/gradle.properties

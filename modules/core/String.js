@@ -20,10 +20,6 @@ String.APATTERN       = /[^a-zA-Z]/;
 String.NUMPATTERN     = /[^0-9]/;
 String.FILEPATTERN    = /[^a-zA-Z0-9-_\. ]/;
 String.HEXPATTERN     = /[^a-fA-F0-9]/;
-// Email and URL RegExps contributed by Scott Gonzalez: http://projects.scottsplayground.com/email_address_validation/
-// licensed unter MIT license - http://www.opensource.org/licenses/mit-license.php
-String.EMAILPATTERN   = /^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?$/i;
-String.URLPATTERN     = /^(https?|ftp):\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(\#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i;
 String.LEFT           = -1
 String.BALANCE        = 0
 String.RIGHT          = 1
@@ -32,15 +28,26 @@ String.SPACE          = " ";
 String.EMPTY          = "";
 String.NULL           = String.EMPTY; // to be deprecated?
 
+// Email and URL RegExps contributed by Scott Gonzalez: http://projects.scottsplayground.com/email_address_validation/
+// licensed unter MIT license - http://www.opensource.org/licenses/mit-license.php
+
+String.EMAILPATTERN   = /^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?$/i;
+
+String.URLPATTERN     = /^(https?|ftp):\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(\#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i;
+
 /**
  * @fileoverview Adds useful methods to the JavaScript String type.
  * <br /><br />
- * To use this optional module, its repository needs to be added to the 
+ * To use this optional module, its repository needs to be added to the
  * application, for example by calling app.addRepository('modules/core/String.js')
  */
 
+app.addRepository('modules/core/Global.js');
+
 /**
  * checks if a date format pattern is correct
+ * @external
+ * @memberof {String}
  * @return Boolean true if the pattern is correct
  */
 String.prototype.isDateFormat = function() {
@@ -56,6 +63,8 @@ String.prototype.isDateFormat = function() {
 /**
  * parse a timestamp into a date object. This is used when users
  * want to set createtime explicitly when creating/editing stories.
+ * @external
+ * @memberof {String}
  * @param String date format to be applied
  * @param Object Java TimeZone Object (optional)
  * @return Object contains the resulting date
@@ -81,6 +90,8 @@ String.prototype.toDate = function(format, timezone) {
  * function checks if the string passed contains any characters that
  * are forbidden in URLs and tries to create a java.net.URL from it
  * FIXME: probably deprecated -> helma.Url
+ * @external
+ * @memberof {String}
  * @return Boolean
  * @see helma.Url.PATTERN
  */
@@ -92,6 +103,8 @@ String.prototype.isUrl = function() {
 /**
  * function checks if the string passed contains any characters
  * that are forbidden in image- or filenames
+ * @external
+ * @memberof {String}
  * @return Boolean
  */
 String.prototype.isFileName = function() {
@@ -102,6 +115,8 @@ String.prototype.isFileName = function() {
 /**
  * function cleans the string passed as argument from any characters
  * that are forbidden or shouldn't be used in filenames
+ * @external
+ * @memberof {String}
  * @return Boolean
  */
 String.prototype.toFileName = function() {
@@ -112,7 +127,9 @@ String.prototype.toFileName = function() {
 /**
  * function checks a string for a valid color value in hexadecimal format.
  * it may also contain # as first character
- *  @returns Boolean false, if string length (without #) > 6 or < 6 or
+ * @external
+ * @memberof {String}
+ * @returns Boolean false, if string length (without #) > 6 or < 6 or
  *              contains any character which is not a valid hex value
  */
 String.prototype.isHexColor = function() {
@@ -129,6 +146,8 @@ String.prototype.isHexColor = function() {
  * converts a string into a hexadecimal color
  * representation (e.g. "ffcc33"). also knows how to
  * convert a color string like "rgb (255, 204, 51)".
+ * @external
+ * @memberof {String}
  * @return String the resulting hex color (w/o "#")
  */
 String.prototype.toHexColor = function() {
@@ -151,6 +170,8 @@ String.prototype.toHexColor = function() {
 /**
  * function returns true if the string contains
  * only a-z and 0-9 (case insensitive!)
+ * @external
+ * @memberof {String}
  * @return Boolean true in case string is alpha, false otherwise
  */
 String.prototype.isAlphanumeric = function() {
@@ -163,6 +184,8 @@ String.prototype.isAlphanumeric = function() {
 /**
  * function cleans a string by throwing away all
  * non-alphanumeric characters
+ * @external
+ * @memberof {String}
  * @return cleaned string
  */
 String.prototype.toAlphanumeric = function() {
@@ -173,6 +196,8 @@ String.prototype.toAlphanumeric = function() {
 /**
  * function returns true if the string contains
  * only characters a-z
+ * @external
+ * @memberof {String}
  * @return Boolean true in case string is alpha, false otherwise
  */
 String.prototype.isAlpha = function() {
@@ -185,6 +210,8 @@ String.prototype.isAlpha = function() {
 /**
  * function returns true if the string contains
  * only 0-9
+ * @external
+ * @memberof {String}
  * @return Boolean true in case string is numeric, false otherwise
  */
 String.prototype.isNumeric = function() {
@@ -196,6 +223,8 @@ String.prototype.isNumeric = function() {
 
 /**
  * transforms the first n characters of a string to uppercase
+ * @external
+ * @memberof {String}
  * @param Number amount of characters to transform
  * @return String the resulting string
  */
@@ -211,6 +240,8 @@ String.prototype.capitalize = function(limit) {
 /**
  * transforms the first n characters of each
  * word in a string to uppercase
+ * @external
+ * @memberof {String}
  * @return String the resulting string
  */
 String.prototype.titleize = function() {
@@ -227,6 +258,8 @@ String.prototype.titleize = function() {
 
 /**
  * translates all characters of a string into HTML entities
+ * @external
+ * @memberof {String}
  * @return String translated result
  */
 String.prototype.entitize = function() {
@@ -243,10 +276,12 @@ String.prototype.entitize = function() {
 /**
  * breaks up a string into two parts called
  * head and tail at the given position
- * don't apply this to HTML, i.e. use stripTags() in advance 
+ * don't apply this to HTML, i.e. use stripTags() in advance
+ * @external
+ * @memberof {String}
  * @param Number number of charactrers or of segments separated by the delimiter
  * @param String pre-/suffix to be pre-/appended to shortened string
- * @param String delimiter 
+ * @param String delimiter
  * @return Object containing head and tail properties
  */
 String.prototype.embody = function(limit, clipping, delimiter) {
@@ -276,6 +311,8 @@ String.prototype.embody = function(limit, clipping, delimiter) {
 
 /**
  * get the head of a string
+ * @external
+ * @memberof {String}
  * @see String.prototype.embody()
  */
 String.prototype.head = function(limit, clipping, delimiter) {
@@ -285,6 +322,8 @@ String.prototype.head = function(limit, clipping, delimiter) {
 
 /**
  * get the tail of a string
+ * @external
+ * @memberof {String}
  * @see String.prototype.embody()
  */
 String.prototype.tail = function(limit, clipping, delimiter) {
@@ -292,9 +331,12 @@ String.prototype.tail = function(limit, clipping, delimiter) {
 };
 
 
-/*
- * set clip method out of compatibility/convenience reason
+/**
  * FIXME: we eventually have to get rid of this one...
+ * set clip method out of compatibility/convenience reason
+ * @external
+ * @memberof {String}
+ * @deprecated
  * @see String.prototype.head()
  */
 String.prototype.clip = String.prototype.head;
@@ -302,6 +344,8 @@ String.prototype.clip = String.prototype.head;
 
 /**
  * function inserts a string every number of characters
+ * @external
+ * @memberof {String}
  * @param Int number of characters after which insertion should take place
  * @param String string to be inserted
  * @param Boolean definitely insert at each interval position
@@ -316,7 +360,7 @@ String.prototype.group = function(interval, str, ignoreWhiteSpace) {
     for (var i=0; i<this.length; i=i+interval) {
         var strPart = this.substring(i, i+interval);
         res.write(strPart);
-        if (ignoreWhiteSpace == true || 
+        if (ignoreWhiteSpace == true ||
             (strPart.length == interval && !/\s/g.test(strPart))) {
             res.write(str);
         }
@@ -327,6 +371,8 @@ String.prototype.group = function(interval, str, ignoreWhiteSpace) {
 
 /**
  * replace all linebreaks and optionally all w/br tags
+ * @external
+ * @memberof {String}
  * @param Boolean flag indicating if html tags should be replaced
  * @param String replacement for the linebreaks / html tags
  * @return String the unwrapped string
@@ -337,62 +383,25 @@ String.prototype.unwrap = function(removeTags, replacement) {
     var str = this.replace(/[\n|\r]/g, replacement);
     if (removeTags)
         str = str.replace(/<[w]?br *\/?>/g, replacement);
-    return str;    
+    return str;
 };
 
 
 /**
  * function calculates the md5 hash of a string
+ * @external
+ * @memberof {String}
  * @return String md5 hash of the string
  */
 String.prototype.md5 = function() {
-    return Packages.helma.util.MD5Encoder.encode(this);
-};
-
-
-/**
- * function repeats a string the specified amount of times
- * @param Int amount of repetitions
- * @return String resulting string
- */
-String.prototype.repeat = function(multiplier) {
-    res.push();
-    for (var i=0; i<multiplier; i++)
-        res.write(this);
-    return res.pop();
-};
-
-
-/**
- * function returns true if the string starts with
- * the string passed as argument
- * @param String string pattern to search for
- * @return Boolean true in case it matches the beginning
- *            of the string, false otherwise
- */
-String.prototype.startsWith = function(str, offset) {
-    var javaObj = new java.lang.String(this);
-    if (offset != null)
-        return javaObj.startsWith(str, offset);
-    return javaObj.startsWith(str);
-};
-
-
-/**
- * function returns true if the string ends with
- * the string passed as argument
- * @param String string pattern to search for
- * @return Boolean true in case it matches the end of
- *            the string, false otherwise
- */
-String.prototype.endsWith = function(str) {
-    var javaObj = new java.lang.String(this);
-    return javaObj.endsWith(str);
+    return Packages.org.apache.commons.codec.digest.DigestUtils.md5Hex(this);
 };
 
 
 /**
  * fills a string with another string up to a desired length
+ * @external
+ * @memberof {String}
  * @param String the filling string
  * @param Number the desired length of the resulting string
  * @param Number the direction which the string will be padded in:
@@ -401,51 +410,46 @@ String.prototype.endsWith = function(str) {
  *                     String.BALANCE and String.RIGHT here as well.)
  * @return String the resulting string
  */
-String.prototype.pad = function(str, len, mode) {
-    if (str  == null || len == null)
-        return this;
-    var diff = len - this.length;
-    if (diff == 0)
-        return this;
-    var left, right = 0;
-    if (mode == null || mode == String.RIGHT)
-        right = diff;
-    else if (mode == String.LEFT)
-        left = diff;
-    else if (mode == String.BALANCE) {
-        right = Math.round(diff / 2);
-        left = diff - right;
+String.prototype.pad = function(str, length, mode) {
+    if (mode === null || mode === String.RIGHT) return this.padEnd(length, str);
+    if (mode === String.LEFT) return this.padStart(length, str);
+
+    if (mode === String.BALANCE && str && length) {
+      const pos = Math.ceil(this.length / 2);
+      const head = this.substr(0, pos);
+      const tail = this.substr(pos);
+      const additionalLength = (length - this.length) / 2;
+      const startLength = head.length + Math.floor(additionalLength);
+      const endLength = tail.length + Math.ceil(additionalLength);
+      return head.padStart(startLength, str) + tail.padEnd(endLength, str);
     }
-    res.push();
-    for (var i=0; i<left; i++)
-        res.write(str);
-    res.write(this);
-    for (var i=0; i<right; i++)
-        res.write(str);
-    return res.pop();
+
+    return this;
 };
 
 
 /**
  * function returns true if a string contains the string
  * passed as argument
+ * @external
+ * @memberof {String}
  * @param String string to search for
  * @param Int Position to start search
  * @param Boolean
  */
 String.prototype.contains = function(str, fromIndex) {
-    if (this.indexOf(str, fromIndex ? fromIndex : 0) > -1)
-        return true;
-    return false;
+    return this.indexOf(str, fromIndex || 0) > -1;
 };
 
 
 /**
  * function compares a string with the one passed as argument
  * using diff
+ * @external
+ * @memberof {String}
  * @param String String to compare against String object value
- * @param String Optional regular expression string to use for 
- *                 splitting. If not defined, newlines will be used.    
+ * @param String Optional regular expression string to use for
+ *                 splitting. If not defined, newlines will be used.
  * @return Object Array containing one JS object for each line
  *                     with the following properties:
  *                     .num Line number
@@ -501,16 +505,9 @@ String.prototype.diff = function(mod, separator) {
 
 
 /**
- * remove leading and trailing whitespace
- */
-String.prototype.trim = function () {
-    var s = new java.lang.String(this);
-    return String(s.trim());
-};
-
-
-/**
  * returns true if the string looks like an e-mail
+ * @external
+ * @memberof {String}
  */
 String.prototype.isEmail = function() {
     return String.EMAILPATTERN.test(this);
@@ -519,6 +516,8 @@ String.prototype.isEmail = function() {
 
 /**
  * returns the amount of occurences of one string in another
+ * @external
+ * @memberof {String}
  */
 String.prototype.count = function(str) {
     var count = 0;
@@ -533,23 +532,27 @@ String.prototype.count = function(str) {
 
 /**
  * returns the string encoded using the base64 algorithm
+ * @external
+ * @memberof {String}
  */
 String.prototype.enbase64 = function() {
-    var bytes = new java.lang.String(this) . getBytes();
-    return new Packages.sun.misc.BASE64Encoder().encode(bytes);
+    var bytes = java.lang.String(this).getBytes('utf-8');
+    return String(java.lang.String(Packages.org.apache.commons.codec.binary.Base64.encodeBase64(bytes), 'utf-8'));
 };
 
 
 /**
  * returns the decoded string using the base64 algorithm
+ * @external
+ * @memberof {String}
  */
 String.prototype.debase64 = function() {
-    var bytes = new Packages.sun.misc.BASE64Decoder().decodeBuffer(this);
-    return String(new java.lang.String(bytes));
+    var bytes = Packages.org.apache.commons.codec.binary.Base64.decodeBase64(this);
+    return String(java.lang.String(bytes, 'utf-8'));
 };
 
 
-// wrapper methods for string-related 
+// wrapper methods for string-related
 // global helma functions
 
 String.prototype.encode = function() {
@@ -574,6 +577,8 @@ String.prototype.stripTags = function() {
 
 /**
  * factory to create functions for sorting objects in an array
+ * @external
+ * @memberof {String}
  * @param String name of the field each object is compared with
  * @param Number order (ascending or descending)
  * @return Function ready for use in Array.prototype.sort
@@ -603,6 +608,8 @@ String.Sorter.cache = {};
 
 /**
  * create a string from a bunch of substrings
+ * @external
+ * @memberof {String}
  * @param String one or more strings as arguments
  * @return String the resulting string
  */
@@ -616,6 +623,8 @@ String.compose = function() {
 
 /**
  * creates a random string (numbers and chars)
+ * @external
+ * @memberof {String}
  * @param len length of key
  * @param mode determines which letters to use. null or 0 = all letters;
  *      1 = skip 0, 1, l and o which can easily be mixed with numbers;
@@ -650,6 +659,8 @@ String.random = function(len, mode) {
 /**
  * append one string onto another and add some "glue"
  * if none of the strings is empty or null.
+ * @external
+ * @memberof {String}
  * @param String the first string
  * @param String the string to be appended onto the first one
  * @param String the "glue" to be inserted between both strings
