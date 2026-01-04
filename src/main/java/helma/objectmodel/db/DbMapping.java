@@ -1591,7 +1591,7 @@ public final class DbMapping {
             char c = str.charAt(i);
 
             if (c == '\'') {
-                sbuf.append("\\'");
+                sbuf.append("''");  // SQL standard: escape single quote by doubling
             } else if (c == '\\') {
                 sbuf.append("\\\\");
             } else {
